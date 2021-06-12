@@ -1,7 +1,17 @@
+import { Redirect } from 'react-router-dom';
+import User from '../../context/user.context';
 
 function SignUp() {
     return (
-        <div>Sign Up</div>
+        <User.Consumer>
+            {({ user, signup }) => user.isLoggedIn ? (
+                <Redirect to='/quiz' />
+            ) : (
+                <div>
+                    <button onClick={signup}>SingUp</button>
+                </div>
+            )}
+        </User.Consumer>
     );
 }
 
