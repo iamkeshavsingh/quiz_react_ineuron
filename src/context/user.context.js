@@ -1,5 +1,5 @@
 import React from 'react';
-import { auth, provider } from '../utils/firebase.utils';
+import { auth, provider, db } from '../utils/firebase.utils';
 
 import Loader from './loader.context';
 
@@ -43,7 +43,17 @@ export class Authentication extends React.Component {
     }
 
     signup = () => {
-        auth.signInWithPopup(provider);
+        auth.signInWithPopup(provider)
+            .then(userCred => {
+                const user = userCred.user;
+                db
+                    .collection('users')
+                    .doc(user.uid)
+                    .set({
+                        name: user.displayName,
+                        email: user.email
+                    });
+            })
         // .then(userCred => {
         //     var user = userCred.user;
         //     this.setState({
