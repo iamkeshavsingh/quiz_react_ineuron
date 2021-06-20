@@ -1,29 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Protected from "../../components/Protected/Protected";
 import QuestionList from '../../components/QuestionList/QuestionList';
 import Header from '../../components/Header/Header';
 
 import { getQuestions } from '../../utils/dq.utils';
 
-class Quiz extends React.Component {
 
-    state = {
-        questions: []
-    };
+function Quiz({ history }) {
 
-    componentDidMount() {
+    var [questions, setQuestions] = useState([]);
+    var [response, setResponse] = useState({});
+
+    function submitQuiz() {
+        var confirm = window.confirm('Are you sure you want to submit?');
+        if (confirm) {
+            var results = 0;
+            questions.forEach((ques) => {
+                var { id, answer } = ques;
+                if (response[id]) {
+                    if (Number(response[id]) === answer) results++;
+                }
+            });
+            history.push('/result', {
+                result: results
+            });
+        }
+    }
+
+    function handleSelect(e) {
+        var questionId = e.target.name;
+        var userChoice = e.target.id;
+
+        setResponse({
+            ...response,
+            [questionId]: userChoice
+        });
+    }
+
+    useEffect(() => {
         getQuestions()
-            .then(ques => this.setState({ questions: ques }))
-    }
+            .then(ques => setQuestions(ques))
+    }, []);
 
-    render() {
-        return (
-            <Protected>
-                <Header />
-                <QuestionList ques={this.state.questions} />
-            </Protected>
-        );
-    }
+    return (
+        <Protected>
+            <Header />
+            <QuestionList submit={submitQuiz} response={response} ques={questions} select={handleSelect} />
+        </Protected>
+    );
 }
 
 

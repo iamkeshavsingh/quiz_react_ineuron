@@ -1,8 +1,9 @@
 import { Breadcrumb, Form } from "react-bootstrap";
 
-function Question({ question, options = [], idx }) {
+function Question({ question, options = [], id, idx, select, response }) {
+
     return (
-        <div className="mt-4 p-2">
+        <div className="m-4 p-2">
             <Breadcrumb listProps={{
                 className: 'flex-column'
             }}>
@@ -11,18 +12,20 @@ function Question({ question, options = [], idx }) {
                     <p>{question}</p>
                 </div>
                 <div className="row flex-column p-4">
-                    {options.map((option, oidx) => {
-                        return (
-                            <Form>
+                    <Form>
+                        {options.map((option, oidx) => {
+                            return (
                                 <Form.Check
                                     type="radio"
-                                    id={`${idx}${oidx}`}
-                                    name={`${idx}question`}
+                                    id={oidx + 1}
+                                    name={id}
                                     label={option}
+                                    onChange={select}
+                                    checked={oidx + 1 === Number(response)}
                                 />
-                            </Form>
-                        );
-                    })}
+                            );
+                        })}
+                    </Form>
                 </div>
             </Breadcrumb>
         </div>

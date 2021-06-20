@@ -1,11 +1,15 @@
-import Protected from "../../components/Protected/Protected";
+import { auth } from '../../utils/firebase.utils';
 
-function Result() {
+function Result({ history, location }) {
+
+    if (!location.state) {
+        history.push('/signup');
+        return null;
+    }
+    auth.signOut();
 
     return (
-        <Protected>
-            <div>Result</div>
-        </Protected>
+        <div>{location.state.result}</div>
     );
 }
 
