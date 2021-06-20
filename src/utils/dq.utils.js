@@ -9,7 +9,7 @@ export const getQuestions = () => {
             var questions = [];
             qs.forEach(doc => {
                 var questionObj = doc.data();
-                questions.push({ ...questionObj });
+                questions.push({ ...questionObj, id: doc.id });
             });
             return questions;
         })
